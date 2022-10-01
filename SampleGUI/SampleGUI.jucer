@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="UP0hAI" name="SampleGUI" projectType="guiapp" useAppConfig="0"
+              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
+  <MAINGROUP id="vLRv7d" name="SampleGUI">
+    <GROUP id="{2679ADA3-5BA1-2BC9-69AD-99CEDBDDA03D}" name="Source">
+      <FILE id="ctgAWl" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="gxfvde" name="MainComponent.cpp" compile="1" resource="0"
+            file="Source/MainComponent.cpp"/>
+      <FILE id="wvvOs8" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
+      <FILE id="biYB3O" name="BlueComponent.cpp" compile="1" resource="0"
+            file="Source/BlueComponent.cpp"/>
+      <FILE id="tStmQ8" name="BlueComponent.h" compile="0" resource="0" file="Source/BlueComponent.h"/>
+      <FILE id="Rony9V" name="RedComponent.cpp" compile="1" resource="0"
+            file="Source/RedComponent.cpp"/>
+      <FILE id="sgkUZE" name="RedComponent.h" compile="0" resource="0" file="Source/RedComponent.h"/>
+    </GROUP>
+  </MAINGROUP>
+  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
+  <EXPORTFORMATS>
+    <VS2022 targetFolder="Builds/VisualStudio2022">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="SampleGUI"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="SampleGUI"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="C:/Users/phlie/Desktop/Audio Plugin Development/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="C:/Users/phlie/Desktop/Audio Plugin Development/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="C:/Users/phlie/Desktop/Audio Plugin Development/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="C:/Users/phlie/Desktop/Audio Plugin Development/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="C:/Users/phlie/Desktop/Audio Plugin Development/JUCE/modules"/>
+      </MODULEPATHS>
+    </VS2022>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+  </MODULES>
+</JUCERPROJECT>
