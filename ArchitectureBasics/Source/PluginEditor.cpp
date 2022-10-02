@@ -17,6 +17,15 @@
 ArchitectureBasicsAudioProcessorEditor::ArchitectureBasicsAudioProcessorEditor (ArchitectureBasicsAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
+    // A basic setup of a slider with its style and text box below.
+    gainSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    gainSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 100, 50);
+    addAndMakeVisible(gainSlider);
+
+    // The attachment is a unique pointer of type AudioProcessorValueTreeState::SliderAttachment.
+    // It contains a reference to the apvts, the ID of the parameter, and the slider to which it connects to.
+    gainSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "GAIN", gainSlider);
+
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setSize (400, 300);
@@ -45,4 +54,7 @@ void ArchitectureBasicsAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
+
+    // The bounds of the component.
+    gainSlider.setBounds(getWidth() / 2 - 100, getHeight() / 2 - 50, 200, 100);
 }

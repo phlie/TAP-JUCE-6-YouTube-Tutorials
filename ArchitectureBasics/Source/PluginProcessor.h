@@ -56,7 +56,16 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    // Holds the various information about the parameters.
+    // The whole point of the apvts is to connect the backend of the Audio processing to the front end of the GUI.
+    // Values from the backend being transfered to the front end and vice-versa.
+    juce::AudioProcessorValueTreeState apvts;
+
 private:
+
+    // Used in initialization of the Value Tree State.
+    juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ArchitectureBasicsAudioProcessor)
 };

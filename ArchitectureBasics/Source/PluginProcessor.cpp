@@ -21,7 +21,10 @@ ArchitectureBasicsAudioProcessor::ArchitectureBasicsAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+// apvts must be explicitly intialized because it does not have a default constructor which is a contstructor without arguments.
+// When the constructor is called, before it goes into the body of the constructor, this initialization list is called first.
+// The pointer to this class must be dereferenced. Its name is "Parameters", and it uses our layout function.
+), apvts(*this, nullptr, "Parameters", createParameters())
 #endif
 {
 }
@@ -141,6 +144,17 @@ void ArchitectureBasicsAudioProcessor::processBlock (juce::AudioBuffer<float>& b
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
+    //=======================================
+    // Don't console out in the process block
+    //=======================================
+
+    // Get Raw Parameter Value while return a std::atomic variable which the value of can then be gotten with...
+    auto g = apvts.getRawParameterValue("GAIN");
+
+    // ... load(), which actually gets the value safely between threads.
+    g->load();
+
+
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't
     // guaranteed to be empty - they may contain garbage).
@@ -190,6 +204,20 @@ void ArchitectureBasicsAudioProcessor::setStateInformation (const void* data, in
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout ArchitectureBasicsAudioProcessor::createParameters()
+{
+    // A vector that contains unique pointers of type Ranged Audio Parameter.
+    std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
+
+    // Push back onto the vector a unique pointer of type Audio Parameter Float with reference name "GAIN".
+    // The name the DAW's see, "Gain" is useful for automating parameters wihtin a daw.
+    // Finally its the minimum value, maximum value, and the default value.
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("GAIN", "Gain", 0.0f, 1.0f, 0.5f));
+
+    // Returns the parameter layout.
+    return { params.begin(), params.end() };
 }
 
 //==============================================================================
