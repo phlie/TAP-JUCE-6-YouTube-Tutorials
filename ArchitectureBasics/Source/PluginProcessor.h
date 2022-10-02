@@ -62,6 +62,9 @@ public:
     juce::AudioProcessorValueTreeState apvts;
 
 private:
+    // Create a juce random object
+    juce::Random rand;
+
 
     // Used in initialization of the Value Tree State.
     juce::AudioProcessorValueTreeState::ParameterLayout createParameters();

@@ -138,6 +138,10 @@ bool ArchitectureBasicsAudioProcessor::isBusesLayoutSupported (const BusesLayout
 // This is where the actual audio comes in, and exits your plugin.
 // It is meant to be running at all times while playing and quickly at that.
 // This is where the changing of the audio actually happens.
+
+// This is where an audio DSP processes that you are doing do their processing.
+// This function is specially designed to run at a quick rate to ensure data is always flowing through the plugin and doesn't slow down the DAW.
+// The AudioBuffer is where the audio information is stored in the form of a buffer with its data type being float.
 void ArchitectureBasicsAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
@@ -152,29 +156,38 @@ void ArchitectureBasicsAudioProcessor::processBlock (juce::AudioBuffer<float>& b
     auto g = apvts.getRawParameterValue("GAIN");
 
     // ... load(), which actually gets the value safely between threads.
-    g->load();
+    auto gLoaded = g->load();
 
+    //=============
+    // Audio Buffer
+    //============
 
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
-    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear (i, 0, buffer.getNumSamples());
+    // Holds information that tells our speakers how to move in and out to produce the sound that our instrument or effect makes.
+    // Normally an Audio Buffer has two channels if it is in stereo mode, the Left and the Right, channel.
+    // It starts at index 0 and continues to the size of the buffer minus one.
+    // Normally audio data needs to be within the range -1.0 to 1.0.
+    
+    // It is important to know how many channels an Audio Buffer has, along with the total number of samples.
+    auto numberOfChannels = buffer.getNumChannels();
+    auto numberOfSamplesInBuffer = buffer.getNumSamples();
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
+    // Used to read from the buffer but doesn't actually work to write to the buffer. For the Left channel:
+    auto readTheBuffer = buffer.getReadPointer(0);
+
+    // Other times we might want to write to the buffer. For the right channel the code is as follows:
+    auto writeTheBuffer = buffer.getWritePointer(1);
+
+    // The standard setup to loop through every sample within every channel.
+    for (auto channel = 0; channel < buffer.getNumChannels(); ++channel)
     {
-        auto* channelData = buffer.getWritePointer (channel);
+        auto* writePointer = buffer.getWritePointer(channel);
 
-        // ..do something to the data...
+        // This loops through each sample in the buffer.
+        for (auto sample = 0; sample < buffer.getNumSamples(); ++sample)
+        {
+            // Finally for testing purposes we will create some white noise which is between -1.0 and 1.0 times the gain set by the slider.
+            writePointer[sample] = (rand.nextFloat() - 0.5f) * 2.0f * gLoaded;
+        }
     }
 }
 
